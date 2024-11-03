@@ -103,9 +103,9 @@ export const Overlay = () => {
                 <Section>
                     <h1 className="font-semibold font-serif text-2xl">🌐 Langues</h1>
                     <ul className="leading-9">
-                        <li>🇫🇷 Français - Langue maternelle</li>
-                        <li>🇬🇧 Anglais - Niveau intermédiaire</li>
-                        <li>🇵🇱 Polonais - Bilingue</li>
+                        <li>Français - Langue maternelle</li>
+                        <li>Anglais - Niveau intermédiaire</li>
+                        <li>Polonais - Bilingue</li>
                     </ul>
                 </Section>
 
@@ -113,11 +113,22 @@ export const Overlay = () => {
                 <Section>
                     <h1 className="font-semibold font-serif text-2xl">📞 Coordonnées</h1>
                     <ul className="leading-9">
-                        <li>👤 <b>Nom :</b> Franck Leroy</li>
-                        <li>📧 <b>Email :</b> franck.leroy222@hotmail.fr</li>
-                        <li>📍 <b>Localisation :</b> Nord, Valenciennes</li>
-                        <li>📱 <b>Téléphone :</b> 06 42 91 83 04</li>
-                        <li>🚗 <b>Permis :</b> Oui</li>
+                        <ul className="leading-9 space-y-2">
+                            <li>👤 <b>Nom :</b> Franck Leroy</li>
+                            <li>📧 <b>Email : </b>
+                                <a href="mailto:franck.leroy222@hotmail.fr" className="text-blue-600 hover:text-blue-800 underline hover:underline-offset-2 transition-colors">
+                                    franck.leroy222@hotmail.fr
+                                </a>
+                            </li>
+                            <li>📍 <b>Localisation :</b> Nord, Valenciennes</li>
+                            <li>📱 <b>Téléphone : </b>
+                                <a href="tel:+33642918304" className="text-blue-600 hover:text-blue-800 underline hover:underline-offset-2 transition-colors">
+                                    06 42 91 83 04
+                                </a>
+                            </li>
+                            <li>🚗 <b>Permis :</b> Oui</li>
+                        </ul>
+
                     </ul>
                 </Section>
             </div>

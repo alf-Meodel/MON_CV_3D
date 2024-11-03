@@ -6,7 +6,7 @@ import { Model360 } from './Sculpt_360'
 const Experience = () => {
     return (
         <>
-
+            {/* <OrbitControls /> */}
             <directionalLight
                 position={[-7.5, 1, -1]}
 

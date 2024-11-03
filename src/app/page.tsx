@@ -1,5 +1,4 @@
 "use client"
-import Configurator from "@/components/fiber/Configurator";
 import Experience from "@/components/fiber/Experience";
 import { CustomizationProvider } from "@/contexts/Customization";
 import { Canvas } from "@react-three/fiber";
@@ -18,7 +17,7 @@ export default function Home() {
         >
           <Experience />
         </Canvas>
-        <Configurator />
+        {/* <Configurator /> */}
       </CustomizationProvider>
 
 
