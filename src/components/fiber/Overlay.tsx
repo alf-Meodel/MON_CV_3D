@@ -66,7 +66,7 @@ export const Overlay = () => {
                 <Section>
                     <h1 className="font-semibold font-serif text-2xl">🏢 Parcours Professionnel</h1>
                     <ul className="leading-9">
-                        <li><b>📅 2024 :</b> SIMPLON CDA - Formation Concepteur Développeur d’application</li>
+                        <li><b>📅 2024 :</b> SIMPLON CDA - Formation Concepteur Développeur d’applications</li>
                         <li><b>💼 2023 :</b> Meodel Design - Création de mon entreprise de Design Web</li>
                         <li><b>🏛️ 2022 :</b> Mairie de Wavrechain - Designer Web / Photographe</li>
                         <li><b>📘 2021 :</b> POPSchool, Anzin - Formation UX/UI DESIGN</li>
