@@ -1,7 +1,8 @@
 import React from 'react'
 import { MeshReflectorMaterial, ScrollControls } from '@react-three/drei'
 import { Overlay } from './Overlay'
-import { Model360 } from './Sculpt_360'
+// import { Model360 } from './Sculpt_360'
+import { LightModel } from './Draco_sculpt_light'
 
 const Experience = () => {
     return (
@@ -14,7 +15,10 @@ const Experience = () => {
             <ambientLight intensity={2} />
 
             <ScrollControls pages={7} damping={0.25}>
-                <Model360 />
+                {/* <Model360 /> */}
+                <LightModel />
+
+
                 <mesh rotation={[-Math.PI / 2, 0, 0]} position-y={-2}>
                     <planeGeometry args={[170, 170]} />
                     <MeshReflectorMaterial
