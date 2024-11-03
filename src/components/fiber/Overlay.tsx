@@ -71,7 +71,7 @@ export const Overlay = () => {
                         <li><b>🏛️ 2022 :</b> Mairie de Wavrechain - Designer Web / Photographe</li>
                         <li><b>📘 2021 :</b> POPSchool, Anzin - Formation UX/UI DESIGN</li>
                         <li><b>🏢 2020 :</b> SVPRINT, Anzin - Développeur Web</li>
-                        <li><b>📚 2019 :</b> POPSchool, Anzin - JAVA EE</li>
+                        <li><b>📚 2019 :</b> POPSchool, Anzin - découverte du JAVA EE</li>
                     </ul>
 
                 </Section>
