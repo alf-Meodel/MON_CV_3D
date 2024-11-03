@@ -88,7 +88,7 @@ export const Overlay = () => {
 
                 {/* Centres d'intérêt */}
                 <Section>
-                    <h1 className="font-semibold font-serif text-2xl">🎉 Centres d&#39;Intérêts</h1>
+                    <h1 className="font-semibold font-serif text-2xl">🎉 Centres d&#39;Intérêt</h1>
 
                     <ul className="leading-9">
                         <li>🎶 Composition Musicale</li>
