@@ -30,7 +30,7 @@ export const Overlay = () => {
             <div className="w-screen">
                 {/* En-tête */}
                 <Section>
-                    <h1 className="font-semibold font-serif text-2xl">Franck Leroy - Concepteur Développeur d&#39;Application 3D</h1>
+                    <h1 className="font-semibold font-serif text-2xl">Franck LEROY - Concepteur Développeur d&#39;Applications 3D</h1>
                     <p className="text-gray-500">Bienvenue sur mon portfolio</p>
                     <p className="mt-3">Compétences techniques :</p>
                     <ul className="leading-9">
@@ -88,7 +88,7 @@ export const Overlay = () => {
 
                 {/* Centres d'intérêt */}
                 <Section>
-                    <h1 className="font-semibold font-serif text-2xl">🎉 Centres d&#39;Intérêt</h1>
+                    <h1 className="font-semibold font-serif text-2xl">🎉 Centres d&#39;Intérêts</h1>
 
                     <ul className="leading-9">
                         <li>🎶 Composition Musicale</li>
@@ -114,7 +114,7 @@ export const Overlay = () => {
                     <h1 className="font-semibold font-serif text-2xl">📞 Coordonnées</h1>
                     <ul className="leading-9">
                         <ul className="leading-9 space-y-2">
-                            <li>👤 <b>Nom :</b> Franck Leroy</li>
+                            <li>👤 <b>Nom :</b> Franck LEROY</li>
                             <li>📧 <b>Email : </b>
                                 <a href="mailto:franck.leroy222@hotmail.fr" className="text-blue-600 hover:text-blue-800 underline hover:underline-offset-2 transition-colors">
                                     franck.leroy222@hotmail.fr
