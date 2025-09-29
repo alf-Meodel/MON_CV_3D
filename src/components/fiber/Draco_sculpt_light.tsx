@@ -46,6 +46,8 @@ export function LightModel(props: ModelProps) {
 
   // Charge la texture 360° de l'image
   const texture = useTexture('/img/puresky.webp')
+  texture.anisotropy = 4
+  texture.flipY = false
   const sphereRef = useRef<THREE.Mesh>(null) // Référence à la sphère
 
   useFrame(() => {
@@ -92,13 +94,13 @@ export function LightModel(props: ModelProps) {
       dispose={null}
       ref={wholeRef}
       rotation={[0, degreesToRadians(-50), 0]}
-      position={isMobile ? [0, 1, -5] : [4, 1, -5]}
+      position={isMobile ? [0, 1, -5] : [6, 1, -5]}
 
     >
 
       {/* Ajoute la sphère pour l'image 360° */}
       <mesh ref={sphereRef} scale={[5, 5, 5]}>
-        <sphereGeometry args={[100, 64, 64]} />
+        <sphereGeometry args={[100, 32, 32]} />
         <meshBasicMaterial map={texture} side={THREE.BackSide} />
       </mesh>
 
