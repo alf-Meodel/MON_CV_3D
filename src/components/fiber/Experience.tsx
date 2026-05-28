@@ -22,9 +22,9 @@ const Experience = () => {
                 <mesh rotation={[-Math.PI / 2, 0, 0]} position-y={-2}>
                     <planeGeometry args={[170, 170]} />
                     <MeshReflectorMaterial
-                        blur={[0, 0]}
+                        blur={[150, 50]}
                         resolution={1024}
-                        mixBlur={0}
+                        mixBlur={0.6}
                         mixStrength={25}
                         roughness={1}
                         depthScale={1.2}

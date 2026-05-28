@@ -37,7 +37,7 @@ export function Model360(props: ModelProps) {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 750)
 
   // Charge la texture 360° de l'image
-  const texture = useTexture('/img/puresky.webp')
+  const texture = useTexture('/img/360_bg_COLOR.webp')
   const sphereRef = useRef<THREE.Mesh>(null) // Référence à la sphère
 
   useFrame(() => {

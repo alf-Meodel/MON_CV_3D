@@ -15,7 +15,7 @@ const Section = ({ right, children }: SectionProps) => {
         <section className={`h-screen flex flex-col justify-center p-10 ${right ? "items-end" : "items-start"} center-on-mobile`}>
             <div className="w-full md:w-3/4 lg:w-1/2 flex items-center justify-center">
                 <div className="max-w-2xl md:max-w-3xl w-full">
-                    <div className="bg-white/85 rounded-lg px-8 py-12 shadow-lg">
+                    <div className="bg-white/70 backdrop-blur-md rounded-lg px-8 py-12 shadow-lg">
                         {children}
                     </div>
                 </div>
