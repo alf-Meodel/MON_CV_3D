@@ -123,49 +123,6 @@
     }
 }
 
-/* ── Titre section — ruban glass depuis le bord droit ── */
-.cv-section-title {
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: auto;
-    z-index: 100;
-    pointer-events: none;
-    padding-top: max(1.1rem, calc(env(safe-area-inset-top, 0px) + 0.65rem));
-    padding-right: max(10px, env(safe-area-inset-right, 0px));
-}
-
-.cv-section-title__ribbon {
-    max-width: min(78vw, 380px);
-    padding: 0.62rem 1rem 0.68rem 1.15rem;
-    animation: cv-title-in 0.42s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.cv-section-title__text {
-    position: relative;
-    z-index: 1;
-    font-family: Georgia, "Times New Roman", Times, serif;
-    font-size: clamp(0.88rem, 3.2vw, 1.05rem);
-    font-weight: 400;
-    letter-spacing: 0.02em;
-    line-height: 1.2;
-    color: var(--cv-text-ice);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-@keyframes cv-title-in {
-    from {
-        opacity: 0;
-        transform: translateX(22px) translateY(-6px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0) translateY(0);
-    }
-}
-
 /* Mobile — zones tactiles plus généreuses (sans élargir le panneau) */
 @media (max-width: 767px) {
     :root {
@@ -185,13 +142,42 @@
         right: 10px;
     }
 
-    /* Nav mobile — seul l'item actif est lisible, le reste très discret */
-    .cv-section-title {
-        display: none;
-    }
-
     section[data-section-index] {
         padding-right: calc(var(--cv-nav-label-max) + var(--cv-nav-slot-x) + 0.25rem);
+    }
+
+    /* Blocs texte — plus transparents sur mobile */
+    .cv-content-card {
+        background: rgba(8, 22, 38, 0.2);
+        backdrop-filter: blur(10px) saturate(140%);
+        -webkit-backdrop-filter: blur(10px) saturate(140%);
+        border-color: rgba(56, 189, 248, 0.12);
+        box-shadow:
+            0 6px 20px rgba(0, 0, 0, 0.12),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        color: rgba(230, 245, 255, 0.84);
+    }
+
+    .cv-content-card h2 {
+        color: rgba(255, 255, 255, 0.92);
+    }
+
+    .cv-hero__cell {
+        background: rgba(8, 22, 38, 0.22);
+        backdrop-filter: blur(10px) saturate(140%);
+        -webkit-backdrop-filter: blur(10px) saturate(140%);
+        border-color: rgba(56, 189, 248, 0.14);
+        box-shadow:
+            0 6px 20px rgba(0, 0, 0, 0.14),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .cv-hero__cell--name {
+        background: linear-gradient(135deg, rgba(8, 26, 50, 0.28), rgba(16, 48, 82, 0.24));
+        border-color: rgba(56, 189, 248, 0.16);
+        box-shadow:
+            0 6px 20px rgba(0, 0, 0, 0.14),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
 
     .cv-section-nav__list {
@@ -689,11 +675,6 @@
         --cv-nav-label-size: 0.68rem;
     }
 
-    .cv-section-title {
-        padding-top: max(1.35rem, calc(env(safe-area-inset-top, 0px) + 0.75rem));
-        padding-right: 24px;
-    }
-
     .cv-lang-toggle {
         padding-top: max(1.35rem, calc(env(safe-area-inset-top, 0px) + 0.75rem));
         padding-left: 24px;
@@ -702,16 +683,6 @@
     .cv-lang-toggle__btn {
         padding: 0.68rem 1rem 0.72rem 1.05rem;
         font-size: 0.92rem;
-    }
-
-    .cv-section-title__ribbon {
-        max-width: min(72vw, 420px);
-        padding: 0.72rem 1.15rem 0.78rem 1.35rem;
-        border-radius: 1.25rem;
-    }
-
-    .cv-section-title__text {
-        font-size: 1.08rem;
     }
 
     .cv-section-nav {
@@ -742,26 +713,12 @@
         right: 32px;
     }
 
-    .cv-section-title {
-        padding-right: 32px;
-    }
-
     .cv-lang-toggle {
         padding-left: 32px;
     }
 
     .cv-lang-toggle__btn {
         font-size: 0.98rem;
-    }
-
-    .cv-section-title__ribbon {
-        max-width: 440px;
-        padding: 0.82rem 1.35rem 0.88rem 1.5rem;
-        border-radius: 1.35rem;
-    }
-
-    .cv-section-title__text {
-        font-size: 1.18rem;
     }
 
     .cv-section-nav__list {

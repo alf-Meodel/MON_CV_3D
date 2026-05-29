@@ -6,12 +6,9 @@ import { useCallback, useEffect, useState, type PointerEvent } from "react";
 import { createPortal } from "react-dom";
 import { useLanguage } from "@/contexts/Language";
 import { NAV_ITEMS, t } from "@/i18n/translations";
+import { setActiveSectionIndex } from "./activeSectionStore";
 import { LanguageToggle } from "./LanguageToggle";
-import {
-    resolveActiveSectionIndex,
-    scrollToSectionByIndex,
-    type DreiScrollSync,
-} from "./sectionScroll";
+import { resolveActiveSectionIndex, scrollToSectionByIndex, type DreiScrollSync } from "./sectionScroll";
 
 export { NAV_ITEMS };
 
@@ -23,7 +20,7 @@ export function SectionNav() {
     const scroll = useScroll();
     const viewportHeight = useThree((state) => state.size.height);
     const { locale } = useLanguage();
-    const [activeIndex, setActiveIndex] = useState(0);
+    const [activeIndex, setActiveIndexLocal] = useState(0);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -36,7 +33,8 @@ export function SectionNav() {
             scroll as unknown as DreiScrollSync,
             viewportHeight
         );
-        setActiveIndex((prev) => (prev === next ? prev : next));
+        setActiveIndexLocal((prev) => (prev === next ? prev : next));
+        setActiveSectionIndex(next);
     }, [scroll, viewportHeight]);
 
     useEffect(() => {
@@ -54,7 +52,8 @@ export function SectionNav() {
     const scrollToSection = useCallback(
         (index: number) => {
             if (!scroll.el) return;
-            setActiveIndex(index);
+            setActiveIndexLocal(index);
+            setActiveSectionIndex(index);
             scrollToSectionByIndex(scroll.el, index, scroll as unknown as DreiScrollSync, viewportHeight);
             if (document.activeElement instanceof HTMLElement) {
                 document.activeElement.blur();
@@ -72,12 +71,6 @@ export function SectionNav() {
     return createPortal(
         <>
             <LanguageToggle />
-
-            <div className="cv-section-title" aria-live="polite">
-                <div className="cv-glass-ribbon cv-section-title__ribbon" key={`${locale}-${NAV_ITEMS[activeIndex].id}`}>
-                    <span className="cv-section-title__text">{t(NAV_ITEMS[activeIndex].title, locale)}</span>
-                </div>
-            </div>
 
             <nav className="cv-section-nav" aria-label={locale === "fr" ? "Navigation du CV" : "CV navigation"}>
                 <ul className="cv-section-nav__list">
