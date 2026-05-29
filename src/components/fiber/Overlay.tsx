@@ -1,21 +1,29 @@
-"use client";  // Ce composant est aussi un composant Client
+"use client";
 
 import { Scroll } from '@react-three/drei';
 import React from 'react';
-
+import { useLanguage } from '@/contexts/Language';
+import { COPY, t, tList } from '@/i18n/translations';
+import { SectionNav } from './SectionNav';
 
 interface SectionProps {
+    id: string;
+    index: number;
     right?: boolean;
+    hero?: boolean;
     children: React.ReactNode;
 }
 
-
-const Section = ({ right, children }: SectionProps) => {
+const Section = ({ id, index, right, hero, children }: SectionProps) => {
     return (
-        <section className={`h-screen flex flex-col justify-center p-10 ${right ? "items-end" : "items-start"} center-on-mobile`}>
+        <section
+            id={id}
+            data-section-index={index}
+            className={`min-h-[100dvh] h-[100dvh] flex flex-col justify-center p-6 md:p-10 ${right ? "items-end" : "items-start"} center-on-mobile`}
+        >
             <div className="w-full md:w-3/4 lg:w-1/2 flex items-center justify-center">
-                <div className="max-w-2xl md:max-w-3xl w-full">
-                    <div className="bg-white/70 backdrop-blur-md rounded-lg px-8 py-12 shadow-lg">
+                <div className={`w-full ${hero ? "max-w-md md:max-w-xl lg:max-w-2xl" : "max-w-md md:max-w-lg"}`}>
+                    <div className={hero ? "cv-hero-card" : "cv-content-card md:px-6 md:py-7 px-5 py-6"}>
                         {children}
                     </div>
                 </div>
@@ -24,118 +32,119 @@ const Section = ({ right, children }: SectionProps) => {
     );
 };
 
+const SectionHeading = ({ children }: { children: React.ReactNode }) => (
+    <h2 className="font-semibold font-serif text-xl md:text-2xl">{children}</h2>
+);
+
+const SectionList = ({ items }: { items: readonly string[] }) => (
+    <ul className="mt-3 leading-7 list-disc list-inside space-y-0.5 text-sm md:text-base">
+        {items.map((item) => (
+            <li key={item}>{item}</li>
+        ))}
+    </ul>
+);
+
+const YearList = ({ items }: { items: readonly { year: string; label: string }[] }) => (
+    <ul className="mt-3 leading-7 list-disc list-inside space-y-0.5 text-sm md:text-base">
+        {items.map((item) => (
+            <li key={`${item.year}-${item.label}`}>
+                <b>{item.year} :</b> {item.label}
+            </li>
+        ))}
+    </ul>
+);
+
 export const Overlay = () => {
+    const { locale } = useLanguage();
+
     return (
         <Scroll html>
+            <SectionNav />
             <div className="w-screen">
-                {/* En-tête */}
-                <Section>
-                    <h1 className="font-serif font-semibold tracking-tight leading-tight text-3xl md:text-4xl">Franck LEROY - UX UI Designer & Développeur</h1>
-                    <div className="mt-3 h-1 w-24 bg-teal-600 rounded"></div>
-                    <h2 className="mt-6 font-semibold text-2xl md:text-3xl">Compétences Design</h2>
-                    <ul className="leading-9 list-disc list-inside space-y-1">
-                        <li>Conception centrée utilisateur</li>
-                        <li>Maquettage sur Figma</li>
-                        <li>Optimisation pour le Web</li>
-                        <li>Modélisation et scènes 3D</li>
-                        <li>Création d’identités visuelles (charte, déclinaisons)</li>
-                        <li>Conception 2D / 3D</li>
-                        <li>Design System</li>
-                        <li>Montage audio et vidéo</li>
-                        <li>Utilisation d’IA génératives</li>
-                        <li>Captation vidéo drone</li>
-                    </ul>
+                <Section id="intro" index={0} hero>
+                    <div className="cv-hero cv-hero--bento">
+                        <div className="cv-hero__grid">
+                            <div className="cv-hero__cell cv-hero__cell--name">
+                                <p className="cv-hero__pre">{t(COPY.hero.pre, locale)}</p>
+                                <h1 className="cv-hero__name">
+                                    <span className="cv-hero__given">Franck</span>
+                                    <span className="cv-hero__surname">LEROY</span>
+                                </h1>
+                            </div>
 
+                            <div className="cv-hero__cell cv-hero__cell--design">
+                                <p className="cv-hero__cell-title">{t(COPY.hero.design, locale)}</p>
+                            </div>
+
+                            <div className="cv-hero__cell cv-hero__cell--dev">
+                                <p className="cv-hero__cell-title">{t(COPY.hero.dev, locale)}</p>
+                            </div>
+                        </div>
+                    </div>
                 </Section>
 
-
-                {/* Compétences transversales */}
-                <Section>
-                    <h1 className="font-semibold font-serif text-2xl md:text-3xl mt-6">Compétences Développement Web</h1>
-                    <ul className="leading-9 list-disc list-inside space-y-1">
-                        <li>HTML / CSS / JavaScript</li>
-                        <li>TypeScript</li>
-                        <li>ReactJS / NextJS</li>
-                        <li>Three.js / React Three Fiber</li>
-                        <li>Tailwind CSS</li>
-                        <li>Node.js / Fastify</li>
-                        <li>Pipeline CI / CD</li>
-                        <li>Tests unitaires et intégration E2E</li>
-                        <li>MERISE et UML</li>
-                    </ul>
+                <Section id="design-1" index={1}>
+                    <SectionHeading>{t(COPY.design1.title, locale)}</SectionHeading>
+                    <SectionList items={tList(COPY.design1.items, locale)} />
                 </Section>
 
-                {/* Parcours professionnel */}
-                <Section>
-                    <h1 className="font-semibold font-serif text-2xl">Parcours Professionnel</h1>
-                    <ul className="leading-9 list-disc list-inside space-y-1">
-                        <li><b>2024 :</b> SIMPLON CDA - Formation Concepteur Développeur d’applications</li>
-                        <li><b>2023 :</b> Meodel Design - Création de mon entreprise de Design Web</li>
-                        <li><b>2022 :</b> Mairie de Wavrechain - Designer Web / Photographe</li>
-                        <li><b>2021 :</b> POPSchool, Anzin - Formation UX/UI DESIGN</li>
-                        <li><b>2020 :</b> SVPRINT, Anzin - Développeur Web</li>
-                        <li><b>2019 :</b> POPSchool, Anzin - découverte du JAVA EE</li>
-                    </ul>
-
+                <Section id="design-2" index={2}>
+                    <SectionHeading>{t(COPY.design2.title, locale)}</SectionHeading>
+                    <SectionList items={tList(COPY.design2.items, locale)} />
                 </Section>
 
-                {/* Autres expériences */}
-                <Section>
-                    <h1 className="font-semibold font-serif text-2xl">Autres Expériences</h1>
-                    <ul className="leading-9 list-disc list-inside space-y-1">
-                        <li>Concours Infirmier en Candidat Libre</li>
-                        <li>Éducateur Spécialisé - Au bonheur de chacun, Péruwelz</li>
-                        <li>Employé administratif - CARMI du Nord, Lens</li>
-                    </ul>
+                <Section id="dev-1" index={3}>
+                    <SectionHeading>{t(COPY.dev1.title, locale)}</SectionHeading>
+                    <SectionList items={tList(COPY.dev1.items, locale)} />
                 </Section>
 
-                {/* Centres d'intérêt */}
-                <Section>
-                    <h1 className="font-semibold font-serif text-2xl">Centres d&#39;Intérêt</h1>
-
-                    <ul className="leading-9 list-disc list-inside space-y-1">
-                        <li>Composition Musicale</li>
-                        <li>Création Audiovisuelle</li>
-                        <li>Marche / Vélo / Photo / Drones</li>
-                        <li>Nouvelles Technologies</li>
-                        <li>Impression 3D</li>
-                    </ul>
+                <Section id="dev-2" index={4}>
+                    <SectionHeading>{t(COPY.dev2.title, locale)}</SectionHeading>
+                    <SectionList items={tList(COPY.dev2.items, locale)} />
                 </Section>
 
-                {/* Langues */}
-                <Section>
-                    <h1 className="font-semibold font-serif text-2xl">Langues</h1>
-                    <ul className="leading-9 list-disc list-inside space-y-1">
-                        <li>Français - Langue maternelle</li>
-                        <li>Anglais - Niveau intermédiaire</li>
-                        <li>Polonais - Bilingue</li>
-                    </ul>
+                <Section id="parcours-1" index={5}>
+                    <SectionHeading>{t(COPY.parcours1.title, locale)}</SectionHeading>
+                    <YearList items={COPY.parcours1.items[locale]} />
                 </Section>
 
-                {/* Coordonnées */}
-                <Section>
-                    <h1 className="font-semibold font-serif text-2xl">Coordonnées</h1>
-                    <ul className="leading-9 list-disc list-inside space-y-1">
-                        <ul className="leading-9 list-disc list-inside space-y-2">
-                            <li><b>Nom :</b> Franck LEROY</li>
-                            <li><b>Email : </b>
-                                <a href="mailto:franck.leroy222@hotmail.fr" className="text-blue-600 hover:text-blue-800 underline hover:underline-offset-2 transition-colors">
-                                    franck.leroy222@hotmail.fr
-                                </a>
-                            </li>
-                            <li><b>Localisation :</b> Nord, Valenciennes</li>
-                            <li><b>Téléphone : </b>
-                                <a href="tel:+33642918304" className="text-blue-600 hover:text-blue-800 underline hover:underline-offset-2 transition-colors">
-                                    06 42 91 83 04
-                                </a>
-                            </li>
-                            <li><b>Permis :</b> Oui</li>
-                        </ul>
+                <Section id="parcours-2" index={6}>
+                    <SectionHeading>{t(COPY.parcours2.title, locale)}</SectionHeading>
+                    <YearList items={COPY.parcours2.items[locale]} />
+                </Section>
 
+                <Section id="experiences" index={7}>
+                    <SectionHeading>{t(COPY.experiences.title, locale)}</SectionHeading>
+                    <SectionList items={tList(COPY.experiences.items, locale)} />
+                </Section>
+
+                <Section id="interets" index={8}>
+                    <SectionHeading>{t(COPY.interets.title, locale)}</SectionHeading>
+                    <SectionList items={tList(COPY.interets.items, locale)} />
+                </Section>
+
+                <Section id="langues" index={9}>
+                    <SectionHeading>{t(COPY.langues.title, locale)}</SectionHeading>
+                    <SectionList items={tList(COPY.langues.items, locale)} />
+                </Section>
+
+                <Section id="contact" index={10}>
+                    <SectionHeading>{t(COPY.contact.title, locale)}</SectionHeading>
+                    <ul className="mt-3 leading-7 list-disc list-inside space-y-0.5 text-sm md:text-base">
+                        <li>
+                            <a href="mailto:franck.leroy222@hotmail.fr" className="underline hover:underline-offset-2">
+                                franck.leroy222@hotmail.fr
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tel:+33642918304" className="underline hover:underline-offset-2">
+                                06 42 91 83 04
+                            </a>
+                        </li>
+                        <li>{t(COPY.contact.location, locale)}</li>
                     </ul>
                 </Section>
             </div>
         </Scroll>
     );
-
 };

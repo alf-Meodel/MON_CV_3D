@@ -11,7 +11,7 @@ const Experience = dynamic(() => import("@/components/fiber/Experience"), {
 
 export default function Home() {
   return (
-    <div className="flex justify-center items-center bg-gradient-to-r h-screen w-full  from-white to-teal-700">
+    <div className="flex justify-center items-center h-screen w-full bg-gradient-to-br from-[#0a1628] via-[#122a45] to-[#134345]">
       <CustomizationProvider>
         <Canvas
           dpr={[1, 1.5]}

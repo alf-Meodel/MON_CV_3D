@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react'
 import { MeshReflectorMaterial, ScrollControls } from '@react-three/drei'
 import { Overlay } from './Overlay'
@@ -14,7 +16,7 @@ const Experience = () => {
                 intensity={2} />
             <ambientLight intensity={1.2} />
 
-            <ScrollControls pages={7} damping={0.25}>
+            <ScrollControls pages={11} damping={0.25}>
                 {/* <Model360 /> */}
                 <LightModel />
 
