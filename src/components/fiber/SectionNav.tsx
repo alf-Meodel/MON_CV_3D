@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState, type PointerEvent } from "react";
 import { createPortal } from "react-dom";
 import { useLanguage } from "@/contexts/Language";
 import { NAV_ITEMS, t } from "@/i18n/translations";
-import { setActiveSectionIndex } from "./activeSectionStore";
+import { setActiveSectionIndex, useActiveSectionIndex } from "./activeSectionStore";
 import { LanguageToggle } from "./LanguageToggle";
 import { resolveActiveSectionIndex, scrollToSectionByIndex, type DreiScrollSync } from "./sectionScroll";
 
@@ -20,7 +20,7 @@ export function SectionNav() {
     const scroll = useScroll();
     const viewportHeight = useThree((state) => state.size.height);
     const { locale } = useLanguage();
-    const [activeIndex, setActiveIndexLocal] = useState(0);
+    const activeIndex = useActiveSectionIndex();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -33,7 +33,6 @@ export function SectionNav() {
             scroll as unknown as DreiScrollSync,
             viewportHeight
         );
-        setActiveIndexLocal((prev) => (prev === next ? prev : next));
         setActiveSectionIndex(next);
     }, [scroll, viewportHeight]);
 
@@ -52,7 +51,6 @@ export function SectionNav() {
     const scrollToSection = useCallback(
         (index: number) => {
             if (!scroll.el) return;
-            setActiveIndexLocal(index);
             setActiveSectionIndex(index);
             scrollToSectionByIndex(scroll.el, index, scroll as unknown as DreiScrollSync, viewportHeight);
             if (document.activeElement instanceof HTMLElement) {

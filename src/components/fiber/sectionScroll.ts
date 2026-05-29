@@ -11,6 +11,11 @@ export type DreiScrollSync = {
 };
 
 let navScrollAnim: number | null = null;
+let navScrollTargetIndex: number | null = null;
+
+export function isNavScrollAnimating(): boolean {
+    return navScrollAnim != null;
+}
 
 function clampRatio(value: number): number {
     return Math.min(Math.max(0, value), 1);
@@ -32,8 +37,31 @@ export function getPageIndexFromRatio(ratio: number, pages: number): number {
     return Math.round(clampRatio(ratio) * (pages - 1));
 }
 
+function getPageHeight(container: HTMLElement | null | undefined, fallback: number): number {
+    if (!container) return fallback;
+    const section = container.querySelector<HTMLElement>(SECTION_SELECTOR);
+    if (section && section.offsetHeight > 0) return section.offsetHeight;
+    return fallback;
+}
+
+function findTransformedHtmlLayer(fixed: HTMLDivElement): HTMLElement | null {
+    for (const child of Array.from(fixed.children)) {
+        if (!(child instanceof HTMLElement)) continue;
+        const inline = child.style.transform;
+        if (inline && inline !== "none") return child;
+        const computed = window.getComputedStyle(child).transform;
+        if (computed && computed !== "none") return child;
+    }
+    return fixed.firstElementChild as HTMLElement | null;
+}
+
 function getScrollThreshold(container: HTMLElement): number {
     return Math.max(0, container.scrollHeight - container.clientHeight);
+}
+
+function getIndexFromTranslateY(translateY: number, pageHeight: number, pages: number): number {
+    if (pageHeight <= 0 || pages <= 1) return 0;
+    return Math.min(pages - 1, Math.max(0, Math.round(-translateY / pageHeight)));
 }
 
 function applyDreiPageState(
@@ -64,7 +92,7 @@ export function measureActiveSectionIndexFromOffset(offset: number, pages: numbe
 function parseTranslateY(transform: string): number | null {
     if (!transform || transform === "none") return null;
 
-    const translateMatch = transform.match(/translate3d\([^,]+,\s*(-?[\d.]+)px/i);
+    const translateMatch = transform.match(/translate3d\([^,]+,\s*(-?[\d.eE+-]+)(?:px)?/i);
     if (translateMatch) return parseFloat(translateMatch[1]);
 
     const translate2Match = transform.match(/translate\([^,]+,\s*(-?[\d.]+)px/i);
@@ -92,11 +120,12 @@ function parseTranslateY(transform: string): number | null {
 export function measureActiveSectionIndexFromTransform(
     fixed: HTMLDivElement | null | undefined,
     viewportHeight: number,
-    pages: number
+    pages: number,
+    container?: HTMLElement | null
 ): number | null {
     if (!fixed || viewportHeight <= 0 || pages <= 1) return null;
 
-    const htmlLayer = fixed.firstElementChild as HTMLElement | null;
+    const htmlLayer = findTransformedHtmlLayer(fixed);
     if (!htmlLayer) return null;
 
     const inlineTransform = htmlLayer.style.transform;
@@ -107,8 +136,8 @@ export function measureActiveSectionIndexFromTransform(
 
     if (translateY == null || Number.isNaN(translateY)) return null;
 
-    const ratio = clampRatio(-translateY / (viewportHeight * (pages - 1)));
-    return getPageIndexFromRatio(ratio, pages);
+    const pageHeight = getPageHeight(container ?? null, viewportHeight);
+    return getIndexFromTranslateY(translateY, pageHeight, pages);
 }
 
 /** Index actif — scrollTop du conteneur (fallback). */
@@ -124,17 +153,42 @@ export function resolveActiveSectionIndex(
     drei: DreiScrollSync,
     viewportHeight: number
 ): number {
+    if (navScrollTargetIndex != null) return navScrollTargetIndex;
+
     const { pages } = drei;
-    const fromTransform = measureActiveSectionIndexFromTransform(drei.fixed, viewportHeight, pages);
-    if (fromTransform != null) return fromTransform;
-
-    if (container) {
-        return measureActiveSectionIndex(container, pages);
-    }
-
     const fromCurrent = measureActiveSectionIndexFromOffset(drei.scroll.current, pages);
     const fromOffset = measureActiveSectionIndexFromOffset(drei.offset, pages);
-    return Math.max(fromCurrent, fromOffset);
+
+    let fromScrollTop = fromCurrent;
+    if (container) {
+        const scrollThreshold = getScrollThreshold(container);
+        if (scrollThreshold > 0) {
+            fromScrollTop = getPageIndexFromRatio(container.scrollTop / scrollThreshold, pages);
+        }
+    }
+
+    const fromTransform = measureActiveSectionIndexFromTransform(
+        drei.fixed,
+        viewportHeight,
+        pages,
+        container
+    );
+
+    const scrollSignals = Math.max(fromCurrent, fromScrollTop, fromOffset);
+
+    // Transform bloqué à Accueil alors que le scroll a avancé (bug mobile fréquent)
+    if (fromTransform === 0 && scrollSignals > 0) {
+        return scrollSignals;
+    }
+
+    if (fromTransform != null) {
+        if (Math.abs(fromTransform - scrollSignals) <= 1) {
+            return fromOffset;
+        }
+        return fromTransform;
+    }
+
+    return scrollSignals;
 }
 
 /**
@@ -151,6 +205,7 @@ export function scrollToSectionByIndex(
 
     const targetRatio = getPageRatio(index, drei.pages);
     const startRatio = drei.offset;
+    navScrollTargetIndex = index;
 
     if (navScrollAnim != null) {
         cancelAnimationFrame(navScrollAnim);
@@ -162,6 +217,7 @@ export function scrollToSectionByIndex(
 
     if (reducedMotion || Math.abs(targetRatio - startRatio) < 0.0001) {
         applyDreiPageState(container, drei, viewportHeight, targetRatio);
+        navScrollTargetIndex = null;
         return;
     }
 
@@ -177,6 +233,7 @@ export function scrollToSectionByIndex(
         } else {
             applyDreiPageState(container, drei, viewportHeight, targetRatio);
             navScrollAnim = null;
+            navScrollTargetIndex = null;
         }
     };
 

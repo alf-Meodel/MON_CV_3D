@@ -248,20 +248,6 @@
         font-size: 0.62rem;
         text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
     }
-
-    .cv-section-nav__item--active .cv-section-nav__ring {
-        opacity: 1;
-        transform: scale(1);
-        width: var(--cv-nav-ring-lg);
-        height: var(--cv-nav-ring-lg);
-        animation: none;
-    }
-
-    .cv-section-nav__item--active .cv-section-nav__fill {
-        width: var(--cv-nav-fill-lg);
-        height: var(--cv-nav-fill-lg);
-        opacity: 1;
-    }
 }
 
 /* ── Hero intro — bento glass ── */
