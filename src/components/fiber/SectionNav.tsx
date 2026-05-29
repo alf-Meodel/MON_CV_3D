@@ -1,13 +1,17 @@
 "use client";
 
 import { useScroll } from "@react-three/drei";
-import { useThree } from "@react-three/fiber";
-import { useCallback, useEffect, useState } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useCallback, useEffect, useState, type PointerEvent } from "react";
 import { createPortal } from "react-dom";
 import { useLanguage } from "@/contexts/Language";
 import { NAV_ITEMS, t } from "@/i18n/translations";
 import { LanguageToggle } from "./LanguageToggle";
-import { measureActiveSectionIndex, scrollToSectionByIndex, type DreiScrollSync } from "./sectionScroll";
+import {
+    resolveActiveSectionIndex,
+    scrollToSectionByIndex,
+    type DreiScrollSync,
+} from "./sectionScroll";
 
 export { NAV_ITEMS };
 
@@ -26,44 +30,42 @@ export function SectionNav() {
         setMounted(true);
     }, []);
 
+    const syncActiveIndex = useCallback(() => {
+        const next = resolveActiveSectionIndex(
+            scroll.el,
+            scroll as unknown as DreiScrollSync,
+            viewportHeight
+        );
+        setActiveIndex((prev) => (prev === next ? prev : next));
+    }, [scroll, viewportHeight]);
+
     useEffect(() => {
         const el = scroll.el;
         if (!el) return;
 
-        let raf = 0;
+        el.addEventListener("scroll", syncActiveIndex, { passive: true });
+        syncActiveIndex();
 
-        const updateActive = () => {
-            setActiveIndex((prev) => {
-                const next = measureActiveSectionIndex(el, scroll.pages);
-                return prev === next ? prev : next;
-            });
-        };
+        return () => el.removeEventListener("scroll", syncActiveIndex);
+    }, [scroll.el, syncActiveIndex]);
 
-        const onScroll = () => {
-            cancelAnimationFrame(raf);
-            raf = requestAnimationFrame(updateActive);
-        };
-
-        updateActive();
-        el.addEventListener("scroll", onScroll, { passive: true });
-        window.addEventListener("resize", onScroll);
-        window.visualViewport?.addEventListener("resize", onScroll);
-
-        return () => {
-            cancelAnimationFrame(raf);
-            el.removeEventListener("scroll", onScroll);
-            window.removeEventListener("resize", onScroll);
-            window.visualViewport?.removeEventListener("resize", onScroll);
-        };
-    }, [scroll.el, scroll.pages]);
+    useFrame(syncActiveIndex);
 
     const scrollToSection = useCallback(
         (index: number) => {
             if (!scroll.el) return;
+            setActiveIndex(index);
             scrollToSectionByIndex(scroll.el, index, scroll as unknown as DreiScrollSync, viewportHeight);
+            if (document.activeElement instanceof HTMLElement) {
+                document.activeElement.blur();
+            }
         },
         [scroll, viewportHeight]
     );
+
+    const handleNavPointerUp = useCallback((event: PointerEvent<HTMLButtonElement>) => {
+        event.currentTarget.blur();
+    }, []);
 
     if (!mounted) return null;
 
@@ -78,22 +80,22 @@ export function SectionNav() {
             </div>
 
             <nav className="cv-section-nav" aria-label={locale === "fr" ? "Navigation du CV" : "CV navigation"}>
-                <div className="cv-section-nav__panel">
-                    <ul className="cv-section-nav__list">
+                <ul className="cv-section-nav__list">
                     {NAV_ITEMS.map((item, index) => {
                         const title = t(item.title, locale);
+                        const isActive = activeIndex === index;
                         return (
-                        <li
-                            key={item.id}
-                            className={`cv-section-nav__row cv-section-nav__row--${index % 2 === 0 ? "out" : "in"}`}
-                        >
+                        <li key={item.id} className="cv-section-nav__row">
                             <button
                                 type="button"
                                 onClick={() => scrollToSection(index)}
-                                className={`cv-section-nav__item ${activeIndex === index ? "cv-section-nav__item--active" : ""}`}
+                                onPointerUp={handleNavPointerUp}
+                                className={`cv-section-nav__item ${isActive ? "cv-section-nav__item--active" : ""}`}
+                                data-nav-active={isActive ? "true" : "false"}
                                 aria-label={title}
-                                aria-current={activeIndex === index ? "true" : undefined}
+                                aria-current={isActive ? "true" : undefined}
                             >
+                                <span className="cv-section-nav__label">{title}</span>
                                 <span className="cv-section-nav__ring">
                                     <span className="cv-section-nav__fill" />
                                 </span>
@@ -102,7 +104,6 @@ export function SectionNav() {
                         );
                     })}
                     </ul>
-                </div>
             </nav>
         </>,
         document.body

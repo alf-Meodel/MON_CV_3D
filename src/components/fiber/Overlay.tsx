@@ -92,24 +92,24 @@ export const Overlay = () => {
                     <SectionList items={tList(COPY.design1.items, locale)} />
                 </Section>
 
-                <Section id="design-2" index={2}>
-                    <SectionHeading>{t(COPY.design2.title, locale)}</SectionHeading>
-                    <SectionList items={tList(COPY.design2.items, locale)} />
-                </Section>
-
-                <Section id="dev-1" index={3}>
+                <Section id="dev-1" index={2}>
                     <SectionHeading>{t(COPY.dev1.title, locale)}</SectionHeading>
                     <SectionList items={tList(COPY.dev1.items, locale)} />
                 </Section>
 
-                <Section id="dev-2" index={4}>
+                <Section id="dev-2" index={3}>
                     <SectionHeading>{t(COPY.dev2.title, locale)}</SectionHeading>
                     <SectionList items={tList(COPY.dev2.items, locale)} />
                 </Section>
 
+                <Section id="accompagnement" index={4}>
+                    <SectionHeading>{t(COPY.design2.title, locale)}</SectionHeading>
+                    <SectionList items={tList(COPY.design2.items, locale)} />
+                </Section>
+
                 <Section id="parcours-1" index={5}>
                     <SectionHeading>{t(COPY.parcours1.title, locale)}</SectionHeading>
-                    <YearList items={COPY.parcours1.items[locale]} />
+                    <SectionList items={tList(COPY.parcours1.items, locale)} />
                 </Section>
 
                 <Section id="parcours-2" index={6}>
@@ -136,8 +136,18 @@ export const Overlay = () => {
                     <SectionHeading>{t(COPY.contact.title, locale)}</SectionHeading>
                     <ul className="mt-3 leading-7 list-disc list-inside space-y-0.5 text-sm md:text-base">
                         <li>
-                            <a href="mailto:franck.leroy222@hotmail.fr" className="underline hover:underline-offset-2">
-                                franck.leroy222@hotmail.fr
+                            <a href={`mailto:${COPY.contact.email}`} className="underline hover:underline-offset-2">
+                                {COPY.contact.email}
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href={COPY.contact.websiteUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="underline hover:underline-offset-2"
+                            >
+                                {t(COPY.contact.websiteLabel, locale)}
                             </a>
                         </li>
                         <li>

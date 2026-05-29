@@ -56,11 +56,85 @@ function applyDreiPageState(
     }
 }
 
-/** Index actif — aligné sur le modèle pages Drei (1 section = 1 page). */
+/** Index actif via offset Drei (aligné sur le rendu visuel). */
+export function measureActiveSectionIndexFromOffset(offset: number, pages: number): number {
+    return getPageIndexFromRatio(offset, pages);
+}
+
+function parseTranslateY(transform: string): number | null {
+    if (!transform || transform === "none") return null;
+
+    const translateMatch = transform.match(/translate3d\([^,]+,\s*(-?[\d.]+)px/i);
+    if (translateMatch) return parseFloat(translateMatch[1]);
+
+    const translate2Match = transform.match(/translate\([^,]+,\s*(-?[\d.]+)px/i);
+    if (translate2Match) return parseFloat(translate2Match[1]);
+
+    const matrix3Match = transform.match(/matrix3d\(([^)]+)\)/);
+    if (matrix3Match) {
+        const values = matrix3Match[1].split(",").map((value) => parseFloat(value.trim()));
+        if (values.length >= 14) return values[13];
+    }
+
+    const matrix2Match = transform.match(/matrix\(([^)]+)\)/);
+    if (matrix2Match) {
+        const values = matrix2Match[1].split(",").map((value) => parseFloat(value.trim()));
+        if (values.length >= 6) return values[5];
+    }
+
+    return null;
+}
+
+/**
+ * Index actif via le transform du layer HTML Drei (position réellement affichée).
+ * Plus fiable que offset seul sur mobile tactile.
+ */
+export function measureActiveSectionIndexFromTransform(
+    fixed: HTMLDivElement | null | undefined,
+    viewportHeight: number,
+    pages: number
+): number | null {
+    if (!fixed || viewportHeight <= 0 || pages <= 1) return null;
+
+    const htmlLayer = fixed.firstElementChild as HTMLElement | null;
+    if (!htmlLayer) return null;
+
+    const inlineTransform = htmlLayer.style.transform;
+    const computedTransform = window.getComputedStyle(htmlLayer).transform;
+    const translateY =
+        parseTranslateY(inlineTransform) ??
+        parseTranslateY(computedTransform === "none" ? "" : computedTransform);
+
+    if (translateY == null || Number.isNaN(translateY)) return null;
+
+    const ratio = clampRatio(-translateY / (viewportHeight * (pages - 1)));
+    return getPageIndexFromRatio(ratio, pages);
+}
+
+/** Index actif — scrollTop du conteneur (fallback). */
 export function measureActiveSectionIndex(container: HTMLElement, pages: number): number {
     const scrollThreshold = getScrollThreshold(container);
     if (scrollThreshold <= 0) return 0;
     return getPageIndexFromRatio(container.scrollTop / scrollThreshold, pages);
+}
+
+/** Résout l'index actif en combinant transform, scrollTop et offset Drei. */
+export function resolveActiveSectionIndex(
+    container: HTMLElement | null | undefined,
+    drei: DreiScrollSync,
+    viewportHeight: number
+): number {
+    const { pages } = drei;
+    const fromTransform = measureActiveSectionIndexFromTransform(drei.fixed, viewportHeight, pages);
+    if (fromTransform != null) return fromTransform;
+
+    if (container) {
+        return measureActiveSectionIndex(container, pages);
+    }
+
+    const fromCurrent = measureActiveSectionIndexFromOffset(drei.scroll.current, pages);
+    const fromOffset = measureActiveSectionIndexFromOffset(drei.offset, pages);
+    return Math.max(fromCurrent, fromOffset);
 }
 
 /**
