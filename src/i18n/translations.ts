@@ -8,7 +8,6 @@ export const NAV_ITEMS = [
     { id: "accompagnement", title: { fr: "Accompagnement", en: "Support" } },
     { id: "parcours-1", title: { fr: "Parcours Pro", en: "Professional Path" } },
     { id: "parcours-2", title: { fr: "Formations", en: "Education" } },
-    { id: "experiences", title: { fr: "Autres Expériences", en: "Other Experience" } },
     { id: "interets", title: { fr: "Centres d'Intérêt", en: "Interests" } },
     { id: "langues", title: { fr: "Langues", en: "Languages" } },
     { id: "contact", title: { fr: "Contact", en: "Contact" } },
@@ -16,8 +15,9 @@ export const NAV_ITEMS = [
 
 export const COPY = {
     hero: {
-        pre: { fr: "Bonjour, je suis", en: "Hello, I am" },
+        title: { fr: "CV Franck LEROY", en: "Resume Franck LEROY" },
         design: { fr: "UX/UI Designer", en: "UX/UI Designer" },
+        designShort: { fr: "Designer", en: "Designer" },
         dev: { fr: "Développeur", en: "Developer" },
     },
     design1: {
@@ -114,13 +114,6 @@ export const COPY = {
                 { year: "2023", label: "Self-taught React / Node.js" },
                 { year: "2025", label: "Application Designer" },
             ],
-        },
-    },
-    experiences: {
-        title: { fr: "Autres Expériences", en: "Other Experience" },
-        items: {
-            fr: ["Concours Infirmier", "Éducateur Spécialisé, Péruwelz", "Admin CARMI du Nord, Lens"],
-            en: ["Nursing exam", "Special Educator, Péruwelz", "CARMI du Nord Admin, Lens"],
         },
     },
     interets: {

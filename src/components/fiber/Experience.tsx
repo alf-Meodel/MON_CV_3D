@@ -16,7 +16,7 @@ const Experience = () => {
                 intensity={2} />
             <ambientLight intensity={1.2} />
 
-            <ScrollControls pages={11} damping={0.25}>
+            <ScrollControls pages={10} damping={0.25}>
                 {/* <Model360 /> */}
                 <LightModel />
 

@@ -56,6 +56,15 @@ export function SectionNav() {
     }, []);
 
     useEffect(() => {
+        if (!isMobile) {
+            document.body.classList.remove("cv-intro-active");
+            return;
+        }
+        document.body.classList.toggle("cv-intro-active", activeIndex === 0);
+        return () => document.body.classList.remove("cv-intro-active");
+    }, [activeIndex, isMobile]);
+
+    useEffect(() => {
         if (!isMobile || !navExpanded) return;
 
         const collapseNav = (event: MouseEvent) => {
@@ -143,7 +152,7 @@ export function SectionNav() {
             <nav
                 ref={navRef}
                 className={`cv-section-nav ${navStateClass}`}
-                aria-label={locale === "fr" ? "Navigation du CV" : "CV navigation"}
+                aria-label={locale === "fr" ? "Navigation du CV" : "Resume navigation"}
                 aria-expanded={isMobile ? navExpanded : undefined}
             >
                 <ul className="cv-section-nav__list">

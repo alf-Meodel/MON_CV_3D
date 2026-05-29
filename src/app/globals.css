@@ -123,6 +123,107 @@
     }
 }
 
+@media (max-width: 767px) {
+    :root {
+        --cv-mobile-lang-h: calc(max(1.1rem, env(safe-area-inset-top, 0px) + 0.65rem) + 2.85rem + 0.4rem);
+        --cv-mobile-title-h: 3.25rem;
+        --cv-mobile-nav-gap: 0.9rem;
+        --cv-mobile-header-h: calc(var(--cv-mobile-lang-h) + var(--cv-mobile-title-h));
+    }
+
+    body.cv-intro-active .cv-section-nav {
+        top: calc(var(--cv-mobile-header-h) + var(--cv-mobile-nav-gap));
+        bottom: auto;
+        transform: none;
+        max-height: calc(100dvh - var(--cv-mobile-header-h) - var(--cv-mobile-nav-gap) - 0.75rem);
+    }
+
+    section#intro {
+        justify-content: flex-start !important;
+        align-items: stretch !important;
+        padding-top: var(--cv-mobile-lang-h);
+        padding-left: max(10px, env(safe-area-inset-left, 0px));
+        padding-right: max(10px, env(safe-area-inset-right, 0px));
+        padding-bottom: 1.25rem;
+    }
+
+    section#intro > div {
+        width: 100% !important;
+        max-width: 100%;
+    }
+
+    section#intro > div > div {
+        width: 100%;
+        max-width: none !important;
+    }
+
+    section#intro .cv-hero-card,
+    section#intro .cv-hero--bento {
+        width: 100%;
+    }
+
+    section#intro .cv-hero__grid {
+        width: 100%;
+        min-height: calc(100dvh - var(--cv-mobile-lang-h) - 1.25rem);
+        gap: 0.65rem;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+
+    section#intro .cv-hero__cell--name {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 0.72rem 1rem 0.78rem;
+        text-align: center;
+    }
+
+    section#intro .cv-hero__cell--design {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+    section#intro .cv-hero__cell--dev {
+        grid-column: 2;
+        grid-row: 3;
+    }
+
+    section#intro .cv-hero__title {
+        width: 100%;
+        font-size: clamp(1.12rem, 5vw, 1.45rem);
+        line-height: 1.15;
+        letter-spacing: 0.03em;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    section#intro .cv-hero__cell {
+        padding: 0.95rem 0.7rem;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    section#intro .cv-hero__cell-title--desktop {
+        display: none;
+    }
+
+    section#intro .cv-hero__cell-title--mobile {
+        display: block;
+    }
+
+    section#intro .cv-hero__cell-title {
+        font-size: clamp(0.68rem, 2.65vw, 0.82rem);
+        line-height: 1.35;
+        text-align: center;
+        overflow-wrap: anywhere;
+    }
+}
+
 /* Mobile — zones tactiles plus généreuses (sans élargir le panneau) */
 @media (max-width: 767px) {
     :root {
@@ -342,6 +443,20 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
+.cv-hero__title {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: clamp(1.65rem, 5.5vw, 2.35rem);
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: 0.02em;
+    color: var(--cv-text-ice);
+}
+
+.cv-hero__cell-title--mobile {
+    display: none;
+}
+
 .cv-hero__cell--design {
     background: linear-gradient(145deg, rgba(10, 36, 68, 0.82), rgba(8, 52, 88, 0.75));
     border-color: rgba(56, 189, 248, 0.28);
@@ -353,39 +468,6 @@
     box-shadow:
         0 14px 40px rgba(0, 0, 0, 0.35),
         inset 0 1px 0 rgba(255, 255, 255, 0.12);
-}
-
-.cv-hero__pre {
-    margin: 0;
-    font-family: var(--font-geist-sans), system-ui, sans-serif;
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--cv-text-muted);
-}
-
-.cv-hero__name {
-    margin: 0.55rem 0 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.12rem;
-    font-family: Georgia, "Times New Roman", Times, serif;
-    font-size: clamp(2rem, 8vw, 2.85rem);
-    line-height: 1.05;
-    letter-spacing: -0.01em;
-}
-
-.cv-hero__given {
-    font-weight: 400;
-    color: var(--cv-text-ice);
-}
-
-.cv-hero__surname {
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: var(--cv-text-warm);
 }
 
 .cv-hero__cell-title {
@@ -415,8 +497,8 @@
         padding: 1.65rem 1.45rem 1.45rem;
     }
 
-    .cv-hero__pre {
-        font-size: 0.78rem;
+    .cv-hero__title {
+        font-size: clamp(1.85rem, 4vw, 2.35rem);
     }
 }
 

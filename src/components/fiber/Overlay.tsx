@@ -69,15 +69,12 @@ export const Overlay = () => {
                     <div className="cv-hero cv-hero--bento">
                         <div className="cv-hero__grid">
                             <div className="cv-hero__cell cv-hero__cell--name">
-                                <p className="cv-hero__pre">{t(COPY.hero.pre, locale)}</p>
-                                <h1 className="cv-hero__name">
-                                    <span className="cv-hero__given">Franck</span>
-                                    <span className="cv-hero__surname">LEROY</span>
-                                </h1>
+                                <h1 className="cv-hero__title">{t(COPY.hero.title, locale)}</h1>
                             </div>
 
                             <div className="cv-hero__cell cv-hero__cell--design">
-                                <p className="cv-hero__cell-title">{t(COPY.hero.design, locale)}</p>
+                                <p className="cv-hero__cell-title cv-hero__cell-title--desktop">{t(COPY.hero.design, locale)}</p>
+                                <p className="cv-hero__cell-title cv-hero__cell-title--mobile">{t(COPY.hero.designShort, locale)}</p>
                             </div>
 
                             <div className="cv-hero__cell cv-hero__cell--dev">
@@ -117,22 +114,17 @@ export const Overlay = () => {
                     <YearList items={COPY.parcours2.items[locale]} />
                 </Section>
 
-                <Section id="experiences" index={7}>
-                    <SectionHeading>{t(COPY.experiences.title, locale)}</SectionHeading>
-                    <SectionList items={tList(COPY.experiences.items, locale)} />
-                </Section>
-
-                <Section id="interets" index={8}>
+                <Section id="interets" index={7}>
                     <SectionHeading>{t(COPY.interets.title, locale)}</SectionHeading>
                     <SectionList items={tList(COPY.interets.items, locale)} />
                 </Section>
 
-                <Section id="langues" index={9}>
+                <Section id="langues" index={8}>
                     <SectionHeading>{t(COPY.langues.title, locale)}</SectionHeading>
                     <SectionList items={tList(COPY.langues.items, locale)} />
                 </Section>
 
-                <Section id="contact" index={10}>
+                <Section id="contact" index={9}>
                     <SectionHeading>{t(COPY.contact.title, locale)}</SectionHeading>
                     <ul className="mt-3 leading-7 list-disc list-inside space-y-0.5 text-sm md:text-base">
                         <li>
