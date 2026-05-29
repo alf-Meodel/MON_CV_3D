@@ -57,12 +57,15 @@ export function SectionNav() {
 
     useEffect(() => {
         if (!isMobile) {
-            document.body.classList.remove("cv-intro-active");
+            document.body.classList.remove("cv-intro-active", "cv-nav-drawer-open");
             return;
         }
         document.body.classList.toggle("cv-intro-active", activeIndex === 0);
-        return () => document.body.classList.remove("cv-intro-active");
-    }, [activeIndex, isMobile]);
+        document.body.classList.toggle("cv-nav-drawer-open", navExpanded);
+        return () => {
+            document.body.classList.remove("cv-intro-active", "cv-nav-drawer-open");
+        };
+    }, [activeIndex, isMobile, navExpanded]);
 
     useEffect(() => {
         if (!isMobile || !navExpanded) return;
@@ -72,6 +75,7 @@ export function SectionNav() {
             if (!(target instanceof Node)) return;
             if (navRef.current?.contains(target)) return;
             if (document.querySelector(".cv-lang-toggle")?.contains(target)) return;
+            if (document.querySelector(".cv-section-nav-backdrop")?.contains(target)) return;
             setExpanded(false);
         };
 
@@ -115,11 +119,18 @@ export function SectionNav() {
     const handleMobileNavTap = useCallback(
         (index: number) => {
             if (!navExpandedRef.current) {
+                if (index !== activeIndexRef.current) {
+                    scrollToSection(index);
+                    return;
+                }
                 setExpanded(true);
                 return;
             }
 
-            if (index === activeIndexRef.current) return;
+            if (index === activeIndexRef.current) {
+                setExpanded(false);
+                return;
+            }
 
             scrollToSection(index);
         },
@@ -149,39 +160,52 @@ export function SectionNav() {
         <>
             <LanguageToggle />
 
-            <nav
-                ref={navRef}
-                className={`cv-section-nav ${navStateClass}`}
-                aria-label={locale === "fr" ? "Navigation du CV" : "Resume navigation"}
-                aria-expanded={isMobile ? navExpanded : undefined}
+            <div
+                className={`cv-section-nav-shell${isMobile && navExpanded ? " cv-section-nav-shell--open" : ""}`}
             >
-                <ul className="cv-section-nav__list">
-                    {NAV_ITEMS.map((item, index) => {
-                        const title = t(item.title, locale);
-                        const isActive = activeIndex === index;
-                        return (
-                            <li
-                                key={item.id}
-                                className={`cv-section-nav__row ${isActive ? "cv-section-nav__row--active" : ""}`}
-                            >
-                                <button
-                                    type="button"
-                                    onClick={(event) => handleItemClick(index, event)}
-                                    className={`cv-section-nav__item ${isActive ? "cv-section-nav__item--active" : ""}`}
-                                    data-nav-active={isActive ? "true" : "false"}
-                                    aria-label={title}
-                                    aria-current={isActive ? "true" : undefined}
+                {isMobile && navExpanded ? (
+                    <button
+                        type="button"
+                        className="cv-section-nav-backdrop"
+                        aria-label={locale === "fr" ? "Fermer le menu de navigation" : "Close navigation menu"}
+                        onClick={() => setExpanded(false)}
+                    />
+                ) : null}
+
+                <nav
+                    ref={navRef}
+                    className={`cv-section-nav ${navStateClass}`}
+                    aria-label={locale === "fr" ? "Navigation du CV" : "Resume navigation"}
+                    aria-expanded={isMobile ? navExpanded : undefined}
+                >
+                    <ul className="cv-section-nav__list">
+                        {NAV_ITEMS.map((item, index) => {
+                            const title = t(item.title, locale);
+                            const isActive = activeIndex === index;
+                            return (
+                                <li
+                                    key={item.id}
+                                    className={`cv-section-nav__row ${isActive ? "cv-section-nav__row--active" : ""}`}
                                 >
-                                    <span className="cv-section-nav__label">{title}</span>
-                                    <span className="cv-section-nav__ring">
-                                        <span className="cv-section-nav__fill" />
-                                    </span>
-                                </button>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </nav>
+                                    <button
+                                        type="button"
+                                        onClick={(event) => handleItemClick(index, event)}
+                                        className={`cv-section-nav__item ${isActive ? "cv-section-nav__item--active" : ""}`}
+                                        data-nav-active={isActive ? "true" : "false"}
+                                        aria-label={title}
+                                        aria-current={isActive ? "true" : undefined}
+                                    >
+                                        <span className="cv-section-nav__label">{title}</span>
+                                        <span className="cv-section-nav__ring">
+                                            <span className="cv-section-nav__fill" />
+                                        </span>
+                                    </button>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </nav>
+            </div>
         </>,
         document.body
     );
