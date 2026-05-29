@@ -2,6 +2,7 @@
 
 import { Scroll } from '@react-three/drei';
 import React from 'react';
+import { useThree } from '@react-three/fiber';
 import { useLanguage } from '@/contexts/Language';
 import { COPY, t, tList } from '@/i18n/translations';
 import { SectionNav } from './SectionNav';
@@ -15,11 +16,14 @@ interface SectionProps {
 }
 
 const Section = ({ id, index, right, hero, children }: SectionProps) => {
+    const pageHeight = useThree((state) => state.size.height);
+
     return (
         <section
             id={id}
             data-section-index={index}
-            className={`min-h-[100dvh] h-[100dvh] flex flex-col justify-center p-6 md:p-10 ${right ? "items-end" : "items-start"} center-on-mobile`}
+            style={{ height: pageHeight, minHeight: pageHeight }}
+            className={`flex flex-col justify-center p-6 md:p-10 ${right ? "items-end" : "items-start"} center-on-mobile`}
         >
             <div className="w-full md:w-3/4 lg:w-1/2 flex items-center justify-center">
                 <div className={`w-full ${hero ? "max-w-md md:max-w-xl lg:max-w-2xl" : "max-w-md md:max-w-lg"}`}>

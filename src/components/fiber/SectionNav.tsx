@@ -1,12 +1,13 @@
 "use client";
 
 import { useScroll } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLanguage } from "@/contexts/Language";
 import { NAV_ITEMS, t } from "@/i18n/translations";
 import { LanguageToggle } from "./LanguageToggle";
-import { measureActiveSectionIndex, scrollToSectionByIndex } from "./sectionScroll";
+import { measureActiveSectionIndex, scrollToSectionByIndex, type DreiScrollSync } from "./sectionScroll";
 
 export { NAV_ITEMS };
 
@@ -16,6 +17,7 @@ export { NAV_ITEMS };
  */
 export function SectionNav() {
     const scroll = useScroll();
+    const viewportHeight = useThree((state) => state.size.height);
     const { locale } = useLanguage();
     const [activeIndex, setActiveIndex] = useState(0);
     const [mounted, setMounted] = useState(false);
@@ -32,7 +34,7 @@ export function SectionNav() {
 
         const updateActive = () => {
             setActiveIndex((prev) => {
-                const next = measureActiveSectionIndex(el);
+                const next = measureActiveSectionIndex(el, scroll.pages);
                 return prev === next ? prev : next;
             });
         };
@@ -53,14 +55,14 @@ export function SectionNav() {
             window.removeEventListener("resize", onScroll);
             window.visualViewport?.removeEventListener("resize", onScroll);
         };
-    }, [scroll.el]);
+    }, [scroll.el, scroll.pages]);
 
     const scrollToSection = useCallback(
         (index: number) => {
             if (!scroll.el) return;
-            scrollToSectionByIndex(scroll.el, index);
+            scrollToSectionByIndex(scroll.el, index, scroll as unknown as DreiScrollSync, viewportHeight);
         },
-        [scroll.el]
+        [scroll, viewportHeight]
     );
 
     if (!mounted) return null;
